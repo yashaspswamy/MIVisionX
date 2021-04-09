@@ -51,7 +51,7 @@ class OneHot(Node):
 
 class Cast(Node):
     """
-       
+
         dtype (nvidia.dali.types.DALIDataType) – Output data type.
 
         bytes_per_sample_hint (int, optional, default = 0) – Output size hint, in bytes per sample.
@@ -67,7 +67,7 @@ class Cast(Node):
     def __init__(self,dtype = types.FLOAT, bytes_per_sample_hint=0, preserve = False, seed =-1,  device = None):
 
         Node().__init__()
-        
+
         self._dtype = dtype
         self._bytes_per_sample_hint = bytes_per_sample_hint
         self._preserve = preserve
@@ -632,7 +632,7 @@ class BBFlip(Node):
 
 
     def __call__(self,bboxes, horizontal=1):
-        
+
         self.data = "BBFlip"
         self.prev = bboxes
         self.next = self.output
@@ -643,7 +643,7 @@ class BBFlip(Node):
 
 def rali_c_func_call(self,input_image, is_output):
         return 0
-    
+
 
 class ImageDecoderSlice(Node):
     """
@@ -759,7 +759,7 @@ class ImageDecoderSlice(Node):
         self._use_chunk_allocator = use_chunk_allocator
         self._use_fast_idct = use_fast_idct
         self._device = device
-        
+
         self.output = Node()
 
 
@@ -852,8 +852,8 @@ class BoxEncoder(Node):
         return self.output, self.output
 
     def rali_c_func_call(self, handle, bboxes_tensor, labels_tensor, criteria=0.5):
-        
-        
+
+
         def calc_iou_tensor(box1, box2):
                     """ Calculation of IoU based on two boxes tensor,
                         Reference to https://github.com/kuangliu/pytorch-src
@@ -865,10 +865,10 @@ class BoxEncoder(Node):
                     """
                     N = box1.size(0)
                     M = box2.size(0)
-                   
+
                     be1 = box1.unsqueeze(1).expand(-1, M, -1)
                     be2 = box2.unsqueeze(0).expand(N, -1, -1)
-                   
+
                     # Left Top & Right Bottom
                     lt = torch.max(be1[:,:,:2], be2[:,:,:2])
                     rb = torch.min(be1[:,:,2:], be2[:,:,2:])
@@ -889,7 +889,7 @@ class BoxEncoder(Node):
 
                     self.dboxes = self._anchors
                     self.nboxes = self.dboxes.size(0)
-                    
+
                     ious = calc_iou_tensor(bboxes_in, self.dboxes)
                     best_dbox_ious, best_dbox_idx = ious.max(dim=0)
                     _ , best_bbox_idx = ious.max(dim=1)
@@ -917,7 +917,7 @@ class BoxEncoder(Node):
                     bboxes_out[:, 3] = h
                     return bboxes_out, labels_out
         return encode(bboxes_in=bboxes_tensor ,labels_in = labels_tensor)
-        
+
 
 
 class ImageDecoder(Node):
@@ -1059,7 +1059,7 @@ class ImageDecoderRandomCrop(Node):
                  num_attempts=10, output_type=0, preserve=False, random_area = None, random_aspect_ratio = None,
                  seed=1, split_stages=False, use_chunk_allocator=False, use_fast_idct= False, device = None):
         Node().__init__()
-        
+
         self._user_feature_key_map = user_feature_key_map if user_feature_key_map else {}
         self._affine = affine
         self._bytes_per_sample_hint = bytes_per_sample_hint
@@ -1398,9 +1398,9 @@ class RandomBBoxCrop( ):
         self._threshold_type = threshold_type
         self._thresholds = thresholds if thresholds else [0.0]
         self._total_num_attempts = total_num_attempts
-       
+
         self.crop_begin = []
-       
+
         if(len(self._crop_shape) == 0):
             self.has_shape = False
             self.crop_width = 0
@@ -1425,7 +1425,7 @@ class RandomBBoxCrop( ):
         self._aspect_ratio = b.CreateFloatUniformRand(self._aspect_ratio[0], self._aspect_ratio[1])
         b.RandomBBoxCrop(handle, self._all_boxes_above_threshold, self._allow_no_crop, self._aspect_ratio, self.has_shape, self.crop_width, self.crop_height, self._num_attempts, self._scaling, self._total_num_attempts )
         # b.RandomBBoxCrop(handle, self.all_boxes_overlap, self.no_crop, self.has_shape, self.crop_width, self.crop_height)
-        
+
 class ColorTwist(Node):
     """
         brightness (float, optional, default = 1.0) –
@@ -1591,7 +1591,7 @@ class Resize(Node):
 
     def rali_c_func_call(self, handle, input_image, is_output):
         output_image = b.Resize(handle, input_image,
-                                self._resize_x, self._resize_y, is_output)
+                                self._resize_x, self._resize_y, self._preserve)
         return output_image
 
 
@@ -1901,9 +1901,10 @@ class Uniform():
 
 
 class GammaCorrection(Node):
-    def __init__(self, gamma=0.5, device=None):
+    def __init__(self, gamma=0.5, device=None, preserve = False):
         Node().__init__()
         self._gamma = gamma
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input):
@@ -1916,7 +1917,8 @@ class GammaCorrection(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.GammaCorrection(handle, input_image, is_output, None)
+        gamma = b.CreateFloatParameter(self._gamma)
+        output_image = b.GammaCorrection(handle, input_image, self._preserve, gamma)
         return output_image
 
 
@@ -2008,10 +2010,11 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
 
     """
 
-    def __init__(self, bytes_per_sample_hint=0, contrast=1.0, image_type= 0, preserve = False, seed = -1, device = None):
+    def __init__(self, bytes_per_sample_hint=0, min_contrast = 0, max_contrast = 90, image_type= 0, preserve = False, seed = -1, device = None):
         Node().__init__()
         self._bytes_per_sample_hint = bytes_per_sample_hint
-        self._contrast = contrast
+        self._min_contrast = min_contrast
+        self._max_contrast = max_contrast
         self._image_type = image_type
         self._preserve = preserve
         self._seed = seed
@@ -2027,7 +2030,9 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Contrast(handle, input_image, is_output, None, None)
+        min_contrast = b.CreateIntParameter(self._min_contrast)
+        max_contrast = b.CreateIntParameter(self._max_contrast)
+        output_image = b.Contrast(handle, input_image, self._preserve, min_contrast, max_contrast)
         return output_image
 
 
@@ -2131,7 +2136,8 @@ size (float or list of float, optional, default = []) – Output size, in pixels
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Rotate(handle, input_image, is_output, None, 0, 0)
+        rotate = b.CreateFloatParameter(self._angle)
+        output_image = b.Rotate(handle, input_image, self._preserve, rotate, 0, 0)
         return output_image
 
 
@@ -2371,10 +2377,11 @@ preserve (bool, optional, default = False) – Do not remove the Op from the gra
 seed (int, optional, default = -1) – Random seed (If not provided it will be populated based on the global seed of the pipeline)
     """
 
-    def __init__(self, brightness=1.0, bytes_per_sample_hint=0, image_type=0,
+    def __init__(self, alpha=1.0, beta=25, bytes_per_sample_hint=0, image_type=0,
                  preserve=False, seed=-1, device= None):
         Node().__init__()
-        self._brightness = brightness
+        self._alpha = alpha
+        self._beta = beta
         self._bytes_per_sample_hint = bytes_per_sample_hint
         self._image_type = image_type
         self._preserve = preserve
@@ -2391,7 +2398,9 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Brightness(handle, input_image, is_output, None, None)
+        alpha = b.CreateFloatParameter(self._alpha)
+        beta = b.CreateIntParameter(self._beta)
+        output_image = b.Brightness(handle, input_image, self._preserve, alpha, beta)
         return output_image
 
 
@@ -2418,9 +2427,10 @@ class Vignette(Node):
 
 class SnPNoise(Node):
 
-    def __init__(self, snpNoise=0.5, device=None):
+    def __init__(self, snpNoise=0.5, device=None, preserve = False):
         Node().__init__()
         self._snpNoise = snpNoise
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input):
@@ -2433,14 +2443,16 @@ class SnPNoise(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.SnPNoise(handle, input_image, is_output, None)
+        SnPNoise = b.CreateFloatParameter(self._snpNoise)
+        output_image = b.SnPNoise(handle, input_image, self._preserve, SnPNoise)
         return output_image
 
 
 class Exposure(Node):
-    def __init__(self, exposure=0.5, device=None):
+    def __init__(self, exposure=0.5, device=None, preserve = False):
         Node().__init__()
         self._exposure = exposure
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input):
@@ -2453,7 +2465,8 @@ class Exposure(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Exposure(handle, input_image, is_output, None)
+        exposure = b.CreateFloatParameter(self._exposure)
+        output_image = b.Exposure(handle, input_image, self._preserve, exposure)
         return output_image
 
 
@@ -2515,4 +2528,61 @@ class Flip(Node):
 
     def rali_c_func_call(self, handle, input_image, is_output):
         output_image = b.Flip(handle, input_image, is_output, None)
+        return output_image
+
+class ColorTemperature(Node):
+    def __init__(self, adjustment_value=50, device=None, preserve = False):
+        Node().__init__()
+        self._adjustment_value = adjustment_value
+        self._preserve = preserve
+        self.output = Node()
+
+    def __call__(self, input):
+        input.next = self
+        self.data = "ColorTemperature"
+        self.prev = input
+        self.next = self.output
+        self.output.prev = self
+        self.output.next = None
+        return self.output
+
+    def rali_c_func_call(self, handle, input_image, is_output):
+        adjustment_value = b.CreateIntParameter(self._adjustment_value)
+        output_image = b.ColorTemp(handle, input_image, self._preserve, adjustment_value)
+        return output_image
+
+class Nop(Node):
+    def __init__(self,  device=None):
+        Node().__init__()
+        self.output = Node()
+
+    def __call__(self, input):
+        input.next = self
+        self.data = "Nop"
+        self.prev = input
+        self.next = self.output
+        self.output.prev = self
+        self.output.next = None
+        return self.output
+
+    def rali_c_func_call(self, handle, input_image, is_output):
+        output_image = b.raliNop(handle, input_image, is_output)
+        return output_image
+
+class Copy(Node):
+    def __init__(self,  device=None):
+        Node().__init__()
+        self.output = Node()
+
+    def __call__(self, input):
+        input.next = self
+        self.data = "Copy"
+        self.prev = input
+        self.next = self.output
+        self.output.prev = self
+        self.output.next = None
+        return self.output
+
+    def rali_c_func_call(self, handle, input_image, is_output):
+        output_image = b.raliCopy(handle, input_image, is_output)
         return output_image
