@@ -1470,13 +1470,13 @@ class ColorTwist(Node):
     def __init__(self, brightness=1.0, bytes_per_sample_hint=0, contrast=1.0, hue = 0.0, image_type = 0,
                  preserve=False, saturation=1.0, seed=-1, device = None):
         Node().__init__()
-        self._brightness = b.CreateFloatParameter(brightness)
+        self._brightness = brightness
         self._bytes_per_sample_hint = bytes_per_sample_hint
-        self._contrast = b.CreateFloatParameter(contrast)
-        self._hue = b.CreateFloatParameter(hue)
+        self._contrast = contrast
+        self._hue = hue
         self._image_type = image_type
         self._preserve = preserve
-        self._saturation = b.CreateFloatParameter(saturation)
+        self._saturation = saturation
         self._seed = seed
         self.output = Node()
         self._temp_brightness = None
@@ -1500,15 +1500,23 @@ class ColorTwist(Node):
     def rali_c_func_call(self, handle, input_image, is_output):
         # b.setSeed(self._seed)
         if(self._temp_brightness != None):
-            self._brightness = self._temp_brightness.rali_c_func_call(handle)
+            brightness = self._temp_brightness.rali_c_func_call(handle)
+        else:
+            brightness = b.CreateFloatParameter(self._brightness)
         if(self._temp_contrast != None):
-            self._contrast = self._temp_contrast.rali_c_func_call(handle)
+            contrast = self._temp_contrast.rali_c_func_call(handle)
+        else:
+            contrast = b.CreateFloatParameter(self._contrast)
         if(self._temp_hue != None):
-            self._hue = self._temp_hue.rali_c_func_call(handle)
+            hue = self._temp_hue.rali_c_func_call(handle)
+        else:
+            hue = b.CreateFloatParameter(self._hue)
         if(self._temp_saturation != None):
-            self._saturation = self._temp_saturation.rali_c_func_call(handle)
-        output_image = b.ColorTwist(handle, input_image, is_output,
-                                    self._brightness, self._contrast, self._hue, self._saturation)
+            saturation = self._temp_saturation.rali_c_func_call(handle)
+        else:
+            saturation = b.CreateFloatParameter(self._saturation)
+        output_image = b.ColorTwist(handle, input_image, self._preserve,
+                                    brightness, contrast, hue, saturation)
         return output_image
 
 
@@ -1676,19 +1684,21 @@ class CropMirrorNormalize(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
+        if(is_output):
+            self._preserve = is_output
         b.setSeed(self._seed)
         output_image = []
         if self._temp is not None:
             mirror = self._temp.rali_c_func_call(handle)
             output_image = b.CropMirrorNormalize(handle, input_image, self._crop_d, self._crop_h, self._crop_w, 1,
-                                                 1, 1, self._mean, self._std, is_output, mirror)
+                                                 1, 1, self._mean, self._std, self._preserve, mirror)
         else:
             if(self._mirror == 0):
                 mirror = b.CreateIntParameter(0)
             else:
                 mirror = b.CreateIntParameter(1)
             output_image = b.CropMirrorNormalize(handle, input_image, self._crop_d, self._crop_h, self._crop_w, self._crop_pos_x,
-                                                 self._crop_pos_y, self._crop_pos_z, self._mean, self._std, is_output, mirror)
+                                                 self._crop_pos_y, self._crop_pos_z, self._mean, self._std, self._preserve, mirror)
         return output_image
 
 
@@ -1763,10 +1773,10 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         output_image = []
         if ((self._crop_w == 0) and (self._crop_h == 0)):
             output_image = b.Crop(
-                handle, input_image, is_output, None, None, None, None, None, None)
+                handle, input_image, self._preserve, None, None, None, None, None, None)
         else:
             output_image = b.CropFixed(handle, input_image, self._crop_w, self._crop_h,
-                                       self._crop_d, is_output,  self._crop_pos_x, self._crop_pos_y, self._crop_pos_z)
+                                       self._crop_d, self._preserve,  self._crop_pos_x, self._crop_pos_y, self._crop_pos_z)
 
         return output_image
 
@@ -1868,7 +1878,7 @@ class RandomCrop(Node):
     def rali_c_func_call(self, handle, input_image, is_output):
         output_image = []
         output_image = b.RandomCrop(
-            handle, input_image, is_output, None, None, None, None, self._num_attempts)
+            handle, input_image, self._preserve, None, None, None, None, self._num_attempts)
         return output_image
 
 
@@ -1938,14 +1948,18 @@ class Snow(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Snow(handle, input_image, is_output, None)
+        snow = b.CreateFloatParameter(self._snow)
+        output_image = b.Snow(handle, input_image, self._preserve, snow)
         return output_image
 
 
 class Rain(Node):
-    def __init__(self, rain=0.5, device=None):
+    def __init__(self, rain=0.5, rain_width = 1.5, rain_height = 15, rain_transparency = 0.25, device=None):
         Node().__init__()
         self._rain = rain
+        self._rain_width = rain_width
+        self._rain_height = rain_height
+        self.rain_transparency = rain_transparency
         self.output = Node()
 
     def __call__(self, input):
@@ -1958,8 +1972,12 @@ class Rain(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
+        rain = b.CreateFloatParameter(self._rain)
+        rain_width = b.CreateIntParameter(self._rain_width)
+        rain_height = b.CreateIntParameter(self._rain_height)
+        rain_transparency = b.CreateFloatParameter(self._rain_transparency)
         output_image = b.Rain(handle, input_image,
-                              is_output, None, None, None, None)
+                              self._preserve, rain, rain_width, rain_height, rain_transparency)
         return output_image
 
 
@@ -1984,7 +2002,8 @@ class Blur(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Blur(handle, input_image, is_output, None)
+        blur = b.CreateFloatParameter(self._blur)
+        output_image = b.Blur(handle, input_image, self._preserve, blur)
         return output_image
 
 
@@ -2061,9 +2080,10 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
 
     """
 
-    def __init__(self, bytes_per_sample_hint=0, fill_value=0.0, interp_type= 0, mask = 1, nDegree = 2, preserve = False, seed = -1, device = None):
+    def __init__(self, bytes_per_sample_hint=0, kernel_size = 3, fill_value=0.0, interp_type= 0, mask = 1, nDegree = 2, preserve = False, seed = -1, device = None):
         Node().__init__()
         self._bytes_per_sample_hint = bytes_per_sample_hint
+        self._kernel_size = kernel_size
         self._fill_value = fill_value
         self._interp_type = interp_type
         self._mask = mask
@@ -2082,7 +2102,8 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Jitter(handle, input_image, is_output, None)
+        kernel_size = b.CreateIntParameter(self._kernel_size)
+        output_image = b.Jitter(handle, input_image, self._preserve, kernel_size)
         return output_image
 
 
@@ -2174,7 +2195,8 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Hue(handle, input_image, is_output, None)
+        hue = b.CreateFloatParameter(self._hue)
+        output_image = b.Hue(handle, input_image, self._preserve, hue)
         return output_image
 
 
@@ -2217,7 +2239,8 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Saturation(handle, input_image, is_output, None)
+        saturation = b.CreateFloatParameter(self._saturation)
+        output_image = b.Saturation(handle, input_image, self._preserve, saturation)
         return output_image
 
 
@@ -2246,7 +2269,7 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
 size (float or list of float, optional, default = []) – Output size, in pixels/points. Non-integer sizes are rounded to nearest integer. Channel dimension should be excluded (e.g. for RGB images specify (480,640), not (480,640,3).
     """
 
-    def __init__(self, bytes_per_sample_hint=0, fill_value=0.0, interp_type = 1, matrix = None, output_dtype = -1, preserve = False, seed = -1, size = None, device = None):
+    def __init__(self, bytes_per_sample_hint=0, fill_value=0.0, interp_type = 1, matrix = [-0.35, 0.35, 0.65, 1.35, -10, 10], output_dtype = -1, preserve = False, seed = -1, size = None, device = None):
         Node().__init__()
         self._bytes_per_sample_hint = bytes_per_sample_hint
         self._fill_value = fill_value
@@ -2268,7 +2291,13 @@ size (float or list of float, optional, default = []) – Output size, in pixels
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.WarpAffine(handle, input_image, is_output, 0, 0, None, None, None, None, None , None)
+        x0 = b.CreateFloatParameter(self._matrix[0])
+        x1 = b.CreateFloatParameter(self._matrix[1])
+        y0 = b.CreateFloatParameter(self._matrix[2])
+        y1 = b.CreateFloatParameter(self._matrix[3])
+        o0 = b.CreateFloatParameter(self._matrix[4])
+        o1 = b.CreateFloatParameter(self._matrix[5])
+        output_image = b.WarpAffine(handle, input_image, self._preserve, 0, 0, x0, x1, y0, y1, o0 , o1)
         return output_image
 
 
@@ -2312,8 +2341,10 @@ value (float, optional, default = 1.0) – Set multiplicative change of value. 1
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image0 = b.Hue(handle, input_image, is_output, None)
-        output_image = b.Saturation(handle, output_image0, is_output, None)
+        hue = b.CreateFloatParameter(self._hue)
+        saturation = b.CreateFloatParameter(self._saturation)
+        output_image0 = b.Hue(handle, input_image, self._preserve, hue)
+        output_image = b.Saturation(handle, output_image0, self._preserve, saturation)
         return output_image
 
 
@@ -2333,7 +2364,8 @@ class Fog(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Fog(handle, input_image, is_output, None)
+        fog = b.CreateFloatParameter(self._fog)
+        output_image = b.Fog(handle, input_image, self._preserve, fog)
         return output_image
 
 
@@ -2421,7 +2453,8 @@ class Vignette(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Vignette(handle, input_image, is_output, None)
+        Vignette = b.CreateFloatParameter(self._vignette)
+        output_image = b.Vignette(handle, input_image, self._preserve, Vignette)
         return output_image
 
 
@@ -2506,8 +2539,9 @@ class Blend(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
+        blend = b.CreateFloatParameter(self._blend)
         output_image = b.Blend(handle, input_image,
-                               self._input2, is_output, None)
+                               self._input2, self._preserve, blend)
         return output_image
 
 
@@ -2527,7 +2561,8 @@ class Flip(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Flip(handle, input_image, is_output, None)
+        flip = b.CreateIntParameter(self._flip)
+        output_image = b.Flip(handle, input_image, self._preserve, flip)
         return output_image
 
 class ColorTemperature(Node):
