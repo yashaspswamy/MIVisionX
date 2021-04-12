@@ -1261,7 +1261,7 @@ class SSDRandomCrop(Node):
         # b.setSeed(self._seed)
         # threshold = b.CreateFloatParameter(0.5)
         output_image = b.SSDRandomCrop(
-            handle, input_image, is_output, None, None, None, None, None, self._num_attempts)
+            handle, input_image, self._preserve, None, None, None, None, None, self._num_attempts)
         return output_image
 
 
@@ -1851,18 +1851,19 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         b.setSeed(self._seed)
         output_image = []
         output_image = b.CenterCropFixed(
-            handle, input_image, self._crop_w, self._crop_h, self._crop_d, is_output)
+            handle, input_image, self._crop_w, self._crop_h, self._crop_d, self._preserve)
         return output_image
 
 
 class RandomCrop(Node):
 
-    def __init__(self, crop_area_factor=[0.08, 1], crop_aspect_ratio=[0.75, 1.333333], crop_pox_x=0, crop_pox_y=0, device = None):
+    def __init__(self, crop_area_factor=[0.08, 1], crop_aspect_ratio=[0.75, 1.333333], crop_pox_x=0, crop_pox_y=0, device = None, preserve = False):
         Node().__init__()
         self._crop_area_factor = crop_area_factor
         self._crop_aspect_ratio = crop_aspect_ratio
         self._crop_pox_x = crop_pox_x
         self._crop_pox_y = crop_pox_y
+        self._preserve = preserve
         self.output = Node()
         self._num_attempts = 20
 
@@ -1933,9 +1934,10 @@ class GammaCorrection(Node):
 
 
 class Snow(Node):
-    def __init__(self, snow=0.5, device=None):
+    def __init__(self, snow=0.5, device=None, preserve = False):
         Node().__init__()
         self._snow = snow
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input):
@@ -1954,12 +1956,13 @@ class Snow(Node):
 
 
 class Rain(Node):
-    def __init__(self, rain=0.5, rain_width = 1.5, rain_height = 15, rain_transparency = 0.25, device=None):
+    def __init__(self, rain=0.5, rain_width = 1.5, rain_height = 15, rain_transparency = 0.25, device=None, preserve = False):
         Node().__init__()
         self._rain = rain
         self._rain_width = rain_width
         self._rain_height = rain_height
         self.rain_transparency = rain_transparency
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input):
@@ -2322,7 +2325,6 @@ value (float, optional, default = 1.0) – Set multiplicative change of value. 1
     def __init__(self, bytes_per_sample_hint=0, dtype= 0, hue = 0.0, saturation = 1.0, preserve = False, seed = -1, value = 1.0, device = None):
         Node().__init__()
         self._bytes_per_sample_hint = bytes_per_sample_hint
-        self._interp_type = interp_type
         self._dtype = dtype
         self._hue = hue
         self._saturation = saturation
@@ -2349,9 +2351,10 @@ value (float, optional, default = 1.0) – Set multiplicative change of value. 1
 
 
 class Fog(Node):
-    def __init__(self, fog=0.5, device=None):
+    def __init__(self, fog=0.5, device=None, preserve = False):
         Node().__init__()
         self._fog = fog
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input):
@@ -2370,8 +2373,9 @@ class Fog(Node):
 
 
 class FishEye(Node):
-    def __init__(self, device=None):
+    def __init__(self, device=None, preserve = False):
         Node().__init__()
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input):
@@ -2384,7 +2388,7 @@ class FishEye(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.FishEye(handle, input_image, is_output)
+        output_image = b.FishEye(handle, input_image, self._preserve)
         return output_image
 
 
@@ -2438,9 +2442,10 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
 
 class Vignette(Node):
 
-    def __init__(self, vignette=0.5, device=None):
+    def __init__(self, vignette=0.5, device=None, preserve = False):
         Node().__init__()
         self._vignette = vignette
+        self._preseve = preserve
         self.output = Node()
 
     def __call__(self, input):
@@ -2504,8 +2509,9 @@ class Exposure(Node):
 
 
 class Pixelate(Node):
-    def __init__(self, device=None):
+    def __init__(self, device=None, preserve = False):
         Node().__init__()
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input):
@@ -2523,9 +2529,10 @@ class Pixelate(Node):
 
 
 class Blend(Node):
-    def __init__(self, blend=0.5, device=None):
+    def __init__(self, blend=0.5, device=None, preserve = False):
         Node().__init__()
         self._blend = blend
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input1, input2):
@@ -2546,9 +2553,10 @@ class Blend(Node):
 
 
 class Flip(Node):
-    def __init__(self, flip=0, device=None):
+    def __init__(self, flip=0, device=None, preserve = False):
         Node().__init__()
         self._flip = flip
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input):
