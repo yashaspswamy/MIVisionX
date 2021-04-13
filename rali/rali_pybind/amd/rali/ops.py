@@ -1990,9 +1990,10 @@ class Blur(Node):
 
     '''
 
-    def __init__(self, blur=3, device=None):
+    def __init__(self, blur=3, device=None, preserve = False):
         Node().__init__()
         self._blur = blur
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input):
