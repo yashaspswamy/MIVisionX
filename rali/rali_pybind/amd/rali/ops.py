@@ -994,32 +994,32 @@ class ImageDecoder(Node):
         num_threads = 1
         if decode_width != None and decode_height != None:
             multiplier = 4
-            if(self.prev.prev.data == "TFRecordReaderClassification") or (self.prev.prev.data == "TFRecordReaderDetection"):
-                output_image = b.TF_ImageDecoder(handle, input_image, types.RGB, num_threads, is_output, self._user_feature_key_map[
-                                                 "image/encoded"], self._user_feature_key_map["image/filename"], shuffle, False, types.USER_GIVEN_SIZE, multiplier*decode_width, multiplier*decode_height)
-            elif((self.prev.prev.data == "Caffe2Reader") or (self.prev.prev.data == "Caffe2ReaderDetection")):
-                output_image = b.Caffe2_ImageDecoderShard(handle, input_image, types.RGB, shard_id, num_shards, is_output, shuffle, False,types.USER_GIVEN_SIZE_ORIG, multiplier*decode_width, multiplier*decode_height)
-            elif((self.prev.prev.data == "CaffeReader") or (self.prev.prev.data == "CaffeReaderDetection")):
-                output_image = b.Caffe_ImageDecoderShard(handle, input_image, types.RGB, shard_id, num_shards, is_output, shuffle, False,types.USER_GIVEN_SIZE_ORIG, multiplier*decode_width, multiplier*decode_height)
-            elif(self.prev.prev.data == "COCOReader") :
-                output_image = b.COCO_ImageDecoderShard(handle, input_image[0], input_image[1], types.RGB, shard_id, num_shards, is_output, shuffle, False,types.USER_GIVEN_SIZE_ORIG, multiplier*decode_width, multiplier*decode_height)
-            else:
-                output_image = b.ImageDecoderShard(handle, input_image, types.RGB, shard_id, num_shards,  is_output, shuffle, False, types.USER_GIVEN_SIZE_ORIG, multiplier*decode_width, multiplier*decode_height)
+            # if(self.prev.prev.data == "TFRecordReaderClassification") or (self.prev.prev.data == "TFRecordReaderDetection"):
+            #     output_image = b.TF_ImageDecoder(handle, input_image, types.RGB, num_threads, is_output, self._user_feature_key_map[
+            #                                      "image/encoded"], self._user_feature_key_map["image/filename"], shuffle, False, types.USER_GIVEN_SIZE, multiplier*decode_width, multiplier*decode_height)
+            # elif((self.prev.prev.data == "Caffe2Reader") or (self.prev.prev.data == "Caffe2ReaderDetection")):
+            #     output_image = b.Caffe2_ImageDecoderShard(handle, input_image, types.RGB, shard_id, num_shards, is_output, shuffle, False,types.USER_GIVEN_SIZE_ORIG, multiplier*decode_width, multiplier*decode_height)
+            # elif((self.prev.prev.data == "CaffeReader") or (self.prev.prev.data == "CaffeReaderDetection")):
+            #     output_image = b.Caffe_ImageDecoderShard(handle, input_image, types.RGB, shard_id, num_shards, is_output, shuffle, False,types.USER_GIVEN_SIZE_ORIG, multiplier*decode_width, multiplier*decode_height)
+            # elif(self.prev.prev.data == "COCOReader") :
+            #     output_image = b.COCO_ImageDecoderShard(handle, input_image[0], input_image[1], types.RGB, shard_id, num_shards, is_output, shuffle, False,types.USER_GIVEN_SIZE_ORIG, multiplier*decode_width, multiplier*decode_height)
+            # else:
+            output_image = b.ImageDecoderShard(handle, input_image, types.RGB, shard_id, num_shards,  is_output, shuffle, False, types.USER_GIVEN_SIZE_ORIG, multiplier*decode_width, multiplier*decode_height)
         else:
-            if(self.prev.prev.data == "TFRecordReaderClassification") or (self.prev.prev.data == "TFRecordReaderDetection"):
-                output_image = b.TF_ImageDecoder(handle, input_image, types.RGB, num_threads, is_output,
-                                                 self._user_feature_key_map["image/encoded"], self._user_feature_key_map["image/filename"], shuffle, False)
-            elif((self.prev.prev.data == "Caffe2Reader") or (self.prev.prev.data == "Caffe2ReaderDetection")):
-                output_image = b.Caffe2_ImageDecoderShard(
-                    handle, input_image, types.RGB, shard_id, num_shards, is_output, shuffle, False)
-            elif((self.prev.prev.data == "CaffeReader") or (self.prev.prev.data == "CaffeReaderDetection")):
-                output_image = b.Caffe_ImageDecoderShard(
-                    handle, input_image, types.RGB, shard_id, num_shards, is_output, shuffle, False)
-            elif(self.prev.prev.data == "COCOReader"):
-                output_image = b.COCO_ImageDecoderShard(
-                    handle, input_image[0], input_image[1], types.RGB, shard_id, num_shards, is_output, shuffle, False)
-            else:
-                output_image = b.ImageDecoderShard(
+            # if(self.prev.prev.data == "TFRecordReaderClassification") or (self.prev.prev.data == "TFRecordReaderDetection"):
+            #     output_image = b.TF_ImageDecoder(handle, input_image, types.RGB, num_threads, is_output,
+            #                                      self._user_feature_key_map["image/encoded"], self._user_feature_key_map["image/filename"], shuffle, False)
+            # elif((self.prev.prev.data == "Caffe2Reader") or (self.prev.prev.data == "Caffe2ReaderDetection")):
+            #     output_image = b.Caffe2_ImageDecoderShard(
+            #         handle, input_image, types.RGB, shard_id, num_shards, is_output, shuffle, False)
+            # elif((self.prev.prev.data == "CaffeReader") or (self.prev.prev.data == "CaffeReaderDetection")):
+            #     output_image = b.Caffe_ImageDecoderShard(
+            #         handle, input_image, types.RGB, shard_id, num_shards, is_output, shuffle, False)
+            # elif(self.prev.prev.data == "COCOReader"):
+            #     output_image = b.COCO_ImageDecoderShard(
+            #         handle, input_image[0], input_image[1], types.RGB, shard_id, num_shards, is_output, shuffle, False)
+            # else:
+            output_image = b.ImageDecoderShard(
                     handle, input_image, types.RGB,  shard_id, num_shards, is_output, shuffle, False)
         return output_image
 
@@ -1261,7 +1261,7 @@ class SSDRandomCrop(Node):
         # b.setSeed(self._seed)
         # threshold = b.CreateFloatParameter(0.5)
         output_image = b.SSDRandomCrop(
-            handle, input_image, self._preserve, None, None, None, None, None, self._num_attempts)
+            handle, input_image, is_output, None, None, None, None, None, self._num_attempts)
         return output_image
 
 
@@ -1502,20 +1502,20 @@ class ColorTwist(Node):
         if(self._temp_brightness != None):
             brightness = self._temp_brightness.rali_c_func_call(handle)
         else:
-            brightness = b.CreateFloatParameter(self._brightness)
+            brightness = self._brightness
         if(self._temp_contrast != None):
             contrast = self._temp_contrast.rali_c_func_call(handle)
         else:
-            contrast = b.CreateFloatParameter(self._contrast)
+            contrast = self._contrast
         if(self._temp_hue != None):
             hue = self._temp_hue.rali_c_func_call(handle)
         else:
-            hue = b.CreateFloatParameter(self._hue)
+            hue = self._hue
         if(self._temp_saturation != None):
             saturation = self._temp_saturation.rali_c_func_call(handle)
         else:
-            saturation = b.CreateFloatParameter(self._saturation)
-        output_image = b.ColorTwist(handle, input_image, self._preserve,
+            saturation = self._saturation
+        output_image = b.ColorTwist(handle, input_image, is_output,
                                     brightness, contrast, hue, saturation)
         return output_image
 
@@ -1599,7 +1599,7 @@ class Resize(Node):
 
     def rali_c_func_call(self, handle, input_image, is_output):
         output_image = b.Resize(handle, input_image,
-                                self._resize_x, self._resize_y, self._preserve)
+                                self._resize_x, self._resize_y, is_output)
         return output_image
 
 
@@ -1691,14 +1691,14 @@ class CropMirrorNormalize(Node):
         if self._temp is not None:
             mirror = self._temp.rali_c_func_call(handle)
             output_image = b.CropMirrorNormalize(handle, input_image, self._crop_d, self._crop_h, self._crop_w, 1,
-                                                 1, 1, self._mean, self._std, self._preserve, mirror)
+                                                 1, 1, self._mean, self._std, is_output, mirror)
         else:
             if(self._mirror == 0):
                 mirror = b.CreateIntParameter(0)
             else:
                 mirror = b.CreateIntParameter(1)
             output_image = b.CropMirrorNormalize(handle, input_image, self._crop_d, self._crop_h, self._crop_w, self._crop_pos_x,
-                                                 self._crop_pos_y, self._crop_pos_z, self._mean, self._std, self._preserve, mirror)
+                                                 self._crop_pos_y, self._crop_pos_z, self._mean, self._std, is_output, mirror)
         return output_image
 
 
@@ -1773,10 +1773,10 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         output_image = []
         if ((self._crop_w == 0) and (self._crop_h == 0)):
             output_image = b.Crop(
-                handle, input_image, self._preserve, None, None, None, None, None, None)
+                handle, input_image, is_output, None, None, None, None, None, None)
         else:
             output_image = b.CropFixed(handle, input_image, self._crop_w, self._crop_h,
-                                       self._crop_d, self._preserve,  self._crop_pos_x, self._crop_pos_y, self._crop_pos_z)
+                                       self._crop_d, is_output,  self._crop_pos_x, self._crop_pos_y, self._crop_pos_z)
 
         return output_image
 
@@ -1851,7 +1851,7 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         b.setSeed(self._seed)
         output_image = []
         output_image = b.CenterCropFixed(
-            handle, input_image, self._crop_w, self._crop_h, self._crop_d, self._preserve)
+            handle, input_image, self._crop_w, self._crop_h, self._crop_d, is_output)
         return output_image
 
 
@@ -1879,7 +1879,7 @@ class RandomCrop(Node):
     def rali_c_func_call(self, handle, input_image, is_output):
         output_image = []
         output_image = b.RandomCrop(
-            handle, input_image, self._preserve, None, None, None, None, self._num_attempts)
+            handle, input_image, is_output, None, None, None, None, self._num_attempts)
         return output_image
 
 
@@ -1928,8 +1928,7 @@ class GammaCorrection(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        gamma = b.CreateFloatParameter(self._gamma)
-        output_image = b.GammaCorrection(handle, input_image, self._preserve, gamma)
+        output_image = b.GammaCorrection(handle, input_image, is_output, self._gamma)
         return output_image
 
 
@@ -1950,8 +1949,7 @@ class Snow(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        snow = b.CreateFloatParameter(self._snow)
-        output_image = b.Snow(handle, input_image, self._preserve, snow)
+        output_image = b.Snow(handle, input_image, is_output, self._snow)
         return output_image
 
 
@@ -1975,12 +1973,8 @@ class Rain(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        rain = b.CreateFloatParameter(self._rain)
-        rain_width = b.CreateIntParameter(self._rain_width)
-        rain_height = b.CreateIntParameter(self._rain_height)
-        rain_transparency = b.CreateFloatParameter(self._rain_transparency)
         output_image = b.Rain(handle, input_image,
-                              self._preserve, rain, rain_width, rain_height, rain_transparency)
+                              is_output,self._rain, self._rain_width, self._rain_height, self._rain_transparency)
         return output_image
 
 
@@ -2006,8 +2000,7 @@ class Blur(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        blur = b.CreateFloatParameter(self._blur)
-        output_image = b.Blur(handle, input_image, self._preserve, blur)
+        output_image = b.Blur(handle, input_image, is_output, self._blur)
         return output_image
 
 
@@ -2053,9 +2046,7 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        min_contrast = b.CreateIntParameter(self._min_contrast)
-        max_contrast = b.CreateIntParameter(self._max_contrast)
-        output_image = b.Contrast(handle, input_image, self._preserve, min_contrast, max_contrast)
+        output_image = b.Contrast(handle, input_image, is_output, self._min_contrast, self._max_contrast)
         return output_image
 
 
@@ -2106,8 +2097,7 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        kernel_size = b.CreateIntParameter(self._kernel_size)
-        output_image = b.Jitter(handle, input_image, self._preserve, kernel_size)
+        output_image = b.Jitter(handle, input_image, is_output, self._kernel_size)
         return output_image
 
 
@@ -2161,8 +2151,7 @@ size (float or list of float, optional, default = []) – Output size, in pixels
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        rotate = b.CreateFloatParameter(self._angle)
-        output_image = b.Rotate(handle, input_image, self._preserve, rotate, 0, 0)
+        output_image = b.Rotate(handle, input_image, is_output,self._angle, 0, 0)
         return output_image
 
 
@@ -2199,8 +2188,7 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        hue = b.CreateFloatParameter(self._hue)
-        output_image = b.Hue(handle, input_image, self._preserve, hue)
+        output_image = b.Hue(handle, input_image, is_output,self._hue)
         return output_image
 
 
@@ -2243,8 +2231,7 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        saturation = b.CreateFloatParameter(self._saturation)
-        output_image = b.Saturation(handle, input_image, self._preserve, saturation)
+        output_image = b.Saturation(handle, input_image, is_output, self._saturation)
         return output_image
 
 
@@ -2301,7 +2288,7 @@ size (float or list of float, optional, default = []) – Output size, in pixels
         y1 = b.CreateFloatParameter(self._matrix[3])
         o0 = b.CreateFloatParameter(self._matrix[4])
         o1 = b.CreateFloatParameter(self._matrix[5])
-        output_image = b.WarpAffine(handle, input_image, self._preserve, 0, 0, x0, x1, y0, y1, o0 , o1)
+        output_image = b.WarpAffine(handle, input_image, is_output, 0, 0, x0, x1, y0, y1, o0 , o1)
         return output_image
 
 
@@ -2344,10 +2331,8 @@ value (float, optional, default = 1.0) – Set multiplicative change of value. 1
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        hue = b.CreateFloatParameter(self._hue)
-        saturation = b.CreateFloatParameter(self._saturation)
-        output_image0 = b.Hue(handle, input_image, self._preserve, hue)
-        output_image = b.Saturation(handle, output_image0, self._preserve, saturation)
+        output_image0 = b.Hue(handle, input_image, is_output, self._hue)
+        output_image = b.Saturation(handle, output_image0, is_output, self._saturation)
         return output_image
 
 
@@ -2368,8 +2353,7 @@ class Fog(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        fog = b.CreateFloatParameter(self._fog)
-        output_image = b.Fog(handle, input_image, self._preserve, fog)
+        output_image = b.Fog(handle, input_image, is_output, self._fog)
         return output_image
 
 
@@ -2389,7 +2373,7 @@ class FishEye(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.FishEye(handle, input_image, self._preserve)
+        output_image = b.FishEye(handle, input_image, is_output)
         return output_image
 
 
@@ -2435,9 +2419,7 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        alpha = b.CreateFloatParameter(self._alpha)
-        beta = b.CreateIntParameter(self._beta)
-        output_image = b.Brightness(handle, input_image, self._preserve, alpha, beta)
+        output_image = b.Brightness(handle, input_image, is_output, self._alpha, self._beta)
         return output_image
 
 
@@ -2459,8 +2441,7 @@ class Vignette(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        Vignette = b.CreateFloatParameter(self._vignette)
-        output_image = b.Vignette(handle, input_image, self._preserve, Vignette)
+        output_image = b.Vignette(handle, input_image, is_output, self._Vignette)
         return output_image
 
 
@@ -2482,8 +2463,7 @@ class SnPNoise(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        SnPNoise = b.CreateFloatParameter(self._snpNoise)
-        output_image = b.SnPNoise(handle, input_image, self._preserve, SnPNoise)
+        output_image = b.SnPNoise(handle, input_image, is_output, self._snpNoise)
         return output_image
 
 
@@ -2504,8 +2484,7 @@ class Exposure(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        exposure = b.CreateFloatParameter(self._exposure)
-        output_image = b.Exposure(handle, input_image, self._preserve, exposure)
+        output_image = b.Exposure(handle, input_image, is_output, self._exposure)
         return output_image
 
 
@@ -2547,9 +2526,8 @@ class Blend(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        blend = b.CreateFloatParameter(self._blend)
         output_image = b.Blend(handle, input_image,
-                               self._input2, self._preserve, blend)
+                               self._input2, is_output, self._blend)
         return output_image
 
 
@@ -2570,8 +2548,7 @@ class Flip(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        flip = b.CreateIntParameter(self._flip)
-        output_image = b.Flip(handle, input_image, self._preserve, flip)
+        output_image = b.Flip(handle, input_image, is_output, self._flip)
         return output_image
 
 class ColorTemperature(Node):
@@ -2591,13 +2568,13 @@ class ColorTemperature(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        adjustment_value = b.CreateIntParameter(self._adjustment_value)
-        output_image = b.ColorTemp(handle, input_image, self._preserve, adjustment_value)
+        output_image = b.ColorTemp(handle, input_image, is_output,self. _adjustment_value)
         return output_image
 
 class Nop(Node):
-    def __init__(self,  device=None):
+    def __init__(self,  device=None, preserve = False):
         Node().__init__()
+        self._preserve = preserve
         self.output = Node()
 
     def __call__(self, input):

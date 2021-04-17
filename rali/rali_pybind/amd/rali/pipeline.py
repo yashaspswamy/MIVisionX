@@ -208,13 +208,22 @@ class Pipeline(object):
                     if(outputs[1].prev.data == "OneHotLabel"):
                         self._numOfClasses = outputs[1].prev.rali_c_func_call(self._handle)
                         self._oneHotEncoding = True
-        
-            
+
+
         status = b.raliVerify(self._handle)
         if(status != types.OK):
             print("Verify graph failed")
             exit(0)
         return outputs
+
+    def verify_graph(self):
+        print("handle:: ",self._handle)
+        outputs = self.define_graph()
+        status = b.raliVerify(self._handle)
+        if(status != types.OK):
+            print("Verify graph failed")
+            exit(0)
+
 
     def run(self):
         """ Run the pipeline using raliRun call
@@ -232,6 +241,27 @@ class Pipeline(object):
 
     def get_handle(self):
         return self._handle
+
+    def set_seed(self,seed=0):
+        return   b.setSeed(seed)
+
+    def create_int_param(self,value):
+        return b.CreateIntParameter(value)
+
+    def create_float_param(self,value):
+        return b.CreateFloatParameter(value)
+
+    def update_int_param(self,value,param):
+        b.UpdateIntParameter(value,param)
+
+    def update_float_param(self,value,param):
+        b.UpdateFloatParameter(value,param)
+
+    def get_int_value(self,param):
+        return b.GetIntValue(param)
+
+    def get_float_value(self,param):
+        return b.GetFloatValue(param)
 
     def copyImage(self, array):
         out = np.frombuffer(array, dtype=array.dtype)
@@ -260,7 +290,7 @@ class Pipeline(object):
         bboxes_tensor = torch.tensor(bboxes_in).float()
         labels_tensor=  torch.tensor(labels_in).long()
         return self._encode_tensor.prev.rali_c_func_call(self._handle, bboxes_tensor , labels_tensor )
-    
+
     def GetOneHotEncodedLabels(self, array):
         return b.getOneHotEncodedLabels(self._handle, array, self._numOfClasses)
 
@@ -271,7 +301,7 @@ class Pipeline(object):
     def GetImageName(self, array_len):
 
         return b.getImageName(self._handle,array_len)
-        
+
     def GetBoundingBoxCount(self, array):
         return b.getBoundingBoxCount(self._handle, array)
 
@@ -303,7 +333,7 @@ class Pipeline(object):
         return b.getOutputWidth(self._handle)
 
     def getOutputHeight(self):
-        return b.getOutputHeight(self._handle) 
+        return b.getOutputHeight(self._handle)
 
     def getOutputImageCount(self):
         return b.getOutputImageCount(self._handle)

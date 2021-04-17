@@ -63,8 +63,10 @@ def main():
 	imageIterator = RALI_iterator(pipe)
 
 	for i, (image_batch, image_tensor) in enumerate(imageIterator, 0):
-		cv2.imshow('image_batch', cv2.cvtColor(image_batch, cv2.COLOR_RGB2BGR))
-		cv2.waitKey(10)
+		#cv2.imshow('image_batch', cv2.cvtColor(image_batch, cv2.COLOR_RGB2BGR))
+		img = cv2.cvtColor(image_batch, cv2.COLOR_RGB2BGR)
+		cv2.imwrite(str(i)+'output_img.png', img)
+		# cv2.waitKey(10)
 
 if __name__ == '__main__':
-    main() 
+    main()
