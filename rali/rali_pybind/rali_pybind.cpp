@@ -659,6 +659,13 @@ namespace rali{
             py::arg("context"),
             py::arg("input"),
             py::arg("is_output"));
+        m.def("LensCorrection",&raliLensCorrection,
+            py::return_value_policy::reference,
+            py::arg("context"),
+            py::arg("input"),
+            py::arg("is_output"),
+            py::arg("strength") = NULL,
+            py::arg("zoom") = NULL );
         m.def("Vignette",&raliVignette,
             py::return_value_policy::reference,
             py::arg("context"),

@@ -2260,7 +2260,7 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
 size (float or list of float, optional, default = []) – Output size, in pixels/points. Non-integer sizes are rounded to nearest integer. Channel dimension should be excluded (e.g. for RGB images specify (480,640), not (480,640,3).
     """
 
-    def __init__(self, bytes_per_sample_hint=0, fill_value=0.0, interp_type = 1, matrix = [-0.35, 0.35, 0.65, 1.35, -10, 10], output_dtype = -1, preserve = False, seed = -1, size = None, device = None):
+    def __init__(self, bytes_per_sample_hint=0, fill_value=0.0, interp_type = 1, matrix = [], output_dtype = -1, preserve = False, seed = -1, size = None, device = None):
         Node().__init__()
         self._bytes_per_sample_hint = bytes_per_sample_hint
         self._fill_value = fill_value
@@ -2282,13 +2282,16 @@ size (float or list of float, optional, default = []) – Output size, in pixels
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        x0 = b.CreateFloatParameter(self._matrix[0])
-        x1 = b.CreateFloatParameter(self._matrix[1])
-        y0 = b.CreateFloatParameter(self._matrix[2])
-        y1 = b.CreateFloatParameter(self._matrix[3])
-        o0 = b.CreateFloatParameter(self._matrix[4])
-        o1 = b.CreateFloatParameter(self._matrix[5])
-        output_image = b.WarpAffine(handle, input_image, is_output, 0, 0, x0, x1, y0, y1, o0 , o1)
+        if(len(self._matrix) == 6):
+            x0 = b.CreateFloatParameter(self._matrix[0])
+            x1 = b.CreateFloatParameter(self._matrix[1])
+            y0 = b.CreateFloatParameter(self._matrix[2])
+            y1 = b.CreateFloatParameter(self._matrix[3])
+            o0 = b.CreateFloatParameter(self._matrix[4])
+            o1 = b.CreateFloatParameter(self._matrix[5])
+            output_image = b.WarpAffine(handle, input_image, is_output, 0, 0, x0, x1, y0, y1, o0 , o1)
+        else:
+            output_image = b.WarpAffine(handle, input_image, is_output, 0, 0, None, None, None, None, None , None)
         return output_image
 
 
@@ -2377,6 +2380,26 @@ class FishEye(Node):
         return output_image
 
 
+class LensCorrection(Node):
+    def __init__(self, device=None,strength = 0.05,zoom = 1.0, preserve = False):
+        Node().__init__()
+        self._preserve = preserve
+        self.output = Node()
+        self._strength = strength
+        self._zoom = zoom
+
+    def __call__(self, input):
+        input.next = self
+        self.data = "LensCorrection"
+        self.prev = input
+        self.next = self.output
+        self.output.prev = self
+        self.output.next = None
+        return self.output
+
+    def rali_c_func_call(self, handle, input_image, is_output):
+        output_image = b.LensCorrection(handle, input_image, is_output,self._strength,self._zoom)
+        return output_image
 class Brightness(Node):
     """
     brightness (float, optional, default = 1.0) –

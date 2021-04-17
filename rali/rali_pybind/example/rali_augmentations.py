@@ -37,6 +37,9 @@ class HybridTrainPipe(Pipeline):
         self.gamma_shift_param = self.create_float_param(0.0)
         #param for rotate
         self.degree_param = self.create_float_param(0.0)
+        #param for lens correction
+        self.strength = self.create_float_param(0.0)
+        self.zoom = self.create_float_param(1.0)
 
         self.decode = ops.ImageDecoder()
         self.contrast = ops.Contrast(min_contrast = self.min_param, max_contrast = self.max_param)
@@ -47,6 +50,8 @@ class HybridTrainPipe(Pipeline):
         self.gamma = ops.GammaCorrection(gamma=self.gamma_shift_param)
         self.rotate = ops.Rotate(angle=self.degree_param)
         self.resize = ops.Resize( resize_x=crop, resize_y=crop)
+        self.lensCorrection = ops.LensCorrection(strength = self.strength, zoom = self.zoom)
+        self.warpaffine = ops.WarpAffine(matrix=[-0.35, 0.35, 0.65, 1.35, -10, 10])
         self.nop = ops.Nop()
         self.copy = ops.Copy()
         self.coin = ops.CoinFlip(probability=0.5)
@@ -64,6 +69,8 @@ class HybridTrainPipe(Pipeline):
         self.colorTemp.output = self.colorTemp.rali_c_func_call(self._handle,self.exposure.output, True)
         self.noise.output = self.noise.rali_c_func_call(self._handle,self.exposure.output,True)
         self.gamma.output = self.gamma.rali_c_func_call(self._handle,self.colorTemp.output,True)
+        self.lensCorrection.output = self.lensCorrection.rali_c_func_call(self._handle,self.gamma.output,True)
+        self.warpaffine.output = self.warpaffine.rali_c_func_call(self._handle,self.lensCorrection.output,True)
         self.nop.output = self.nop.rali_c_func_call(self._handle, self.gamma.output,True)
         self.rotate.output = self.rotate.rali_c_func_call(self._handle, self.brightness.output,True)
 
