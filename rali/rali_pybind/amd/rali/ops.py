@@ -1732,8 +1732,8 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
 
     """
 
-    def __init__(self, bytes_per_sample_hint=0, crop=[0.0, 0.0], crop_d=1, crop_h= 0, crop_pos_x = 0.5, crop_pos_y = 0.5, crop_pos_z = 0.5,
-                 crop_w=0, image_type=0, output_dtype=types.FLOAT, preserve = False, seed = 1, device = None):
+    def __init__(self, bytes_per_sample_hint=0, crop=[], crop_d=1, crop_h= 0,crop_w=0, crop_pos_x = 0.5, crop_pos_y = 0.5, crop_pos_z = 0.5,
+                  image_type=0, output_dtype=types.FLOAT, preserve = False, seed = 1, device = None):
         Node().__init__()
         self._bytes_per_sample_hint = bytes_per_sample_hint
         self._crop = crop
@@ -1954,12 +1954,12 @@ class Snow(Node):
 
 
 class Rain(Node):
-    def __init__(self, rain=0.5, rain_width = 1.5, rain_height = 15, rain_transparency = 0.25, device=None, preserve = False):
+    def __init__(self, rain=0.5, rain_width = 1, rain_height = 15, rain_transparency = 0.25, device=None, preserve = False):
         Node().__init__()
         self._rain = rain
         self._rain_width = rain_width
         self._rain_height = rain_height
-        self.rain_transparency = rain_transparency
+        self._rain_transparency = rain_transparency
         self._preserve = preserve
         self.output = Node()
 
@@ -2448,7 +2448,7 @@ seed (int, optional, default = -1) – Random seed (If not provided it will be p
 
 class Vignette(Node):
 
-    def __init__(self, vignette=0.5, device=None, preserve = False):
+    def __init__(self, vignette=50, device=None, preserve = False):
         Node().__init__()
         self._vignette = vignette
         self._preseve = preserve
@@ -2464,7 +2464,7 @@ class Vignette(Node):
         return self.output
 
     def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Vignette(handle, input_image, is_output, self._Vignette)
+        output_image = b.Vignette(handle, input_image, is_output, self._vignette)
         return output_image
 
 
@@ -2548,9 +2548,11 @@ class Blend(Node):
         self.output.next = None
         return self.output
 
-    def rali_c_func_call(self, handle, input_image, is_output):
-        output_image = b.Blend(handle, input_image,
-                               self._input2, is_output, self._blend)
+    def rali_c_func_call(self, handle, input_image1, input_image2, is_output):
+        # output_image = b.Blend(handle, input_image,
+        #                        self._input2, is_output, self._blend)
+        output_image = b.Blend(handle, input_image1,
+                               input_image2, is_output, self._blend)
         return output_image
 
 

@@ -13,7 +13,7 @@ class HybridTrainPipe(Pipeline):
         #  Params for decoder
         self.decode_width = 500
         self.decode_height = 500
-        self.shuffle = True
+        self.shuffle = False
         self.shard_id = 0
         self.num_shards = 1
         self.path = data_dir
@@ -25,7 +25,7 @@ class HybridTrainPipe(Pipeline):
         self.min_param = self.create_int_param(0)
         self.max_param = self.create_int_param(255)
         #param for brightness
-        self.alpha_param = self.create_float_param(1)
+        self.alpha_param = self.create_float_param(0.5)
         self.beta_param = self.create_float_param(10)
         #param for colorTemp
         self.adjustment_param = self.create_int_param(0)
@@ -40,6 +40,31 @@ class HybridTrainPipe(Pipeline):
         #param for lens correction
         self.strength = self.create_float_param(0.0)
         self.zoom = self.create_float_param(1.0)
+        #param for snow
+        self.snow = self.create_float_param(0.1)
+        #param for rain
+        self.rain = self.create_float_param(0.1)
+        self.rain_width = self.create_int_param(2)
+        self.rain_height = self.create_int_param(15)
+        self.rain_transparency = self.create_float_param(0.25)
+        #param for blur
+        self.blur = self.create_int_param(5)
+        #param for jitter
+        self.kernel_size = self.create_int_param(3)
+        #param for hue
+        self.hue = self.create_float_param(1.0)
+        #param for saturation
+        self.saturation = self.create_float_param(1.5)
+        #param for warp affine
+        self.affine_matrix = [0.35,0.25,0.75,1,1,1]
+        #param for fog
+        self.fog = self.create_float_param(0.35)
+        #param for vignette
+        self.vignette = self.create_float_param(50)
+        #param for flip
+        self.flip_axis = self.create_int_param(0)
+        #param for blend
+        self.blend = self.create_float_param(0.5)
 
         self.decode = ops.ImageDecoder()
         self.contrast = ops.Contrast(min_contrast = self.min_param, max_contrast = self.max_param)
@@ -51,7 +76,20 @@ class HybridTrainPipe(Pipeline):
         self.rotate = ops.Rotate(angle=self.degree_param)
         self.resize = ops.Resize( resize_x=crop, resize_y=crop)
         self.lensCorrection = ops.LensCorrection(strength = self.strength, zoom = self.zoom)
-        self.warpaffine = ops.WarpAffine(matrix=[-0.35, 0.35, 0.65, 1.35, -10, 10])
+        self.warpaffine = ops.WarpAffine(matrix=self.affine_matrix)
+        self.slice = ops.Slice(crop_h=250,crop_w=250,crop_pos_x = 0,crop_pos_y=0)
+        self.snow = ops.Snow(snow=self.snow)
+        self.rain = ops.Rain(rain=self.rain, rain_width = self.rain_width, rain_height = self.rain_height, rain_transparency =self.rain_transparency)
+        self.blur = ops.Blur(blur = self.blur)
+        self.jitter =ops.Jitter(kernel_size = self.kernel_size)
+        self.hue = ops.Hue(hue=self.hue)
+        self.saturation = ops.Saturation(saturation = self.saturation)
+        self.fisheye = ops.FishEye()
+        self.vignette = ops.Vignette(vignette = self.vignette)
+        self.fog = ops.Fog(fog=self.fog)
+        self.pixelate = ops.Pixelate()
+        self.flip = ops.Flip(flip=self.flip_axis)
+        self.blend = ops.Blend(blend = self.blend)
         self.nop = ops.Nop()
         self.copy = ops.Copy()
         self.coin = ops.CoinFlip(probability=0.5)
@@ -59,20 +97,33 @@ class HybridTrainPipe(Pipeline):
     def define_graph(self):
         rng = self.coin()
         self.decode.output = self.decode.rali_c_func_call(self._handle,self.path,self.decode_width,self.decode_height,self.shuffle,self.shard_id,self.num_shards,False)
-        self.resize.output = self.resize.rali_c_func_call(self._handle,self.decode.output,False)
-        self.brightness.output = self.brightness.rali_c_func_call(self._handle,self.decode.output,False)
-        self.copy.output = self.copy.rali_c_func_call(self._handle,self.resize.output,True)
-        self.exposure.output = self.exposure.rali_c_func_call(self._handle,self.copy.output, False)
-        self.contrast.output = self.contrast.rali_c_func_call(self._handle,self.exposure.output,True)
-        self.brightness.output = self.brightness.rali_c_func_call(self._handle,self.contrast.output,True)
-        self.exposure.output = self.exposure.rali_c_func_call(self._handle,self.contrast.output,True)
-        self.colorTemp.output = self.colorTemp.rali_c_func_call(self._handle,self.exposure.output, True)
-        self.noise.output = self.noise.rali_c_func_call(self._handle,self.exposure.output,True)
-        self.gamma.output = self.gamma.rali_c_func_call(self._handle,self.colorTemp.output,True)
-        self.lensCorrection.output = self.lensCorrection.rali_c_func_call(self._handle,self.gamma.output,True)
-        self.warpaffine.output = self.warpaffine.rali_c_func_call(self._handle,self.lensCorrection.output,True)
-        self.nop.output = self.nop.rali_c_func_call(self._handle, self.gamma.output,True)
-        self.rotate.output = self.rotate.rali_c_func_call(self._handle, self.brightness.output,True)
+        self.slice.output = self.slice.rali_c_func_call(self._handle, self.decode.output, False)
+        self.resize.output = self.resize.rali_c_func_call(self._handle,self.decode.output,True)
+        self.brightness.output = self.brightness.rali_c_func_call(self._handle,self.resize.output,False)
+        # self.fog.output = self.fog.rali_c_func_call(self._handle,self.resize.output,True)
+        # self.fisheye.output = self.fisheye.rali_c_func_call(self._handle,self.resize.output,True)
+        # self.vignette.output = self.vignette.rali_c_func_call(self._handle,self.resize.output,True)
+        # self.pixelate.output = self.pixelate.rali_c_func_call(self._handle,self.resize.output,True)
+        self.flip.output = self.flip.rali_c_func_call(self._handle,self.resize.output,False)
+        self.blend = self.blend.rali_c_func_call(self._handle,self.resize.output,self.flip.output,True)
+        # self.blur.output = self.blur.rali_c_func_call(self._handle,self.resize.output,True)
+        # self.jitter.output = self.jitter.rali_c_func_call(self._handle,self.resize.output,True)
+        # self.hue.output = self.hue.rali_c_func_call(self._handle,self.resize.output,True)
+        # self.saturation.output = self.saturation.rali_c_func_call(self._handle,self.resize.output,True)
+        # self.snow.output = self.snow.rali_c_func_call(self._handle,self.brightness.output,True)
+        # self.gamma.output = self.gamma.rali_c_func_call(self._handle,self.brightness.output,True)
+        # self.rain.output = self.rain.rali_c_func_call(self._handle,self.brightness.output,True)
+        # self.copy.output = self.copy.rali_c_func_call(self._handle,self.resize.output,True)
+        # self.exposure.output = self.exposure.rali_c_func_call(self._handle,self.copy.output, False)
+        # self.contrast.output = self.contrast.rali_c_func_call(self._handle,self.exposure.output,True)
+        # self.brightness.output = self.brightness.rali_c_func_call(self._handle,self.contrast.output,True)
+        # self.exposure.output = self.exposure.rali_c_func_call(self._handle,self.contrast.output,True)
+        # self.colorTemp.output = self.colorTemp.rali_c_func_call(self._handle,self.exposure.output, True)
+        # self.noise.output = self.noise.rali_c_func_call(self._handle,self.exposure.output,True)
+        # self.lensCorrection.output = self.lensCorrection.rali_c_func_call(self._handle,self.gamma.output,True)
+        # self.warpaffine.output = self.warpaffine.rali_c_func_call(self._handle,self.resize.output,True)
+        # self.nop.output = self.nop.rali_c_func_call(self._handle, self.gamma.output,True)
+        # self.rotate.output = self.rotate.rali_c_func_call(self._handle, self.brightness.output,True)
 
     def updateAugmentationParameter(self, augmentation):
         #values for contrast
@@ -133,7 +184,7 @@ def main():
     for i, (image_batch) in enumerate(imageIterator, 0):
         #cv2.imshow('image_batch', cv2.cvtColor(image_batch, cv2.COLOR_RGB2BGR))
         print("Processing image:: ",i)
-        pipe.updateAugmentationParameter(0.5+(i/0.1))
+        pipe.updateAugmentationParameter(0.5+(i/0.01))
         pipe.renew_parameters()
         img = cv2.cvtColor(image_batch, cv2.COLOR_RGB2BGR)
         cv2.imwrite(str(i)+'output_img.png', img)
