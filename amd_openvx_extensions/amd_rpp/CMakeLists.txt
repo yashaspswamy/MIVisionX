@@ -86,52 +86,19 @@ list(APPEND SOURCES
         source/MedianFilterbatchPD.cpp
         source/MinbatchPD.cpp
         source/MinMaxLoc.cpp
-        source/Multiply.cpp
         source/MultiplybatchPD.cpp
-        source/MultiplybatchPDROID.cpp
-        source/MultiplybatchPS.cpp
-        source/Noise.cpp
-        source/NoisebatchPD.cpp
-        source/NoisebatchPDROID.cpp
-        source/NoisebatchPS.cpp
-        source/NonLinearFilter.cpp   
+        source/NoisebatchPD.cpp 
         source/NonLinearFilterbatchPD.cpp
-        source/NonLinearFilterbatchPDROID.cpp
-        source/NonLinearFilterbatchPS.cpp   
-        source/NonMaxSupression.cpp
         source/NonMaxSupressionbatchPD.cpp
-        source/NonMaxSupressionbatchPDROID.cpp
-        source/NonMaxSupressionbatchPS.cpp   
         source/nop.cpp
-        source/Occlusion.cpp
         source/OcclusionbatchPD.cpp
-        source/OcclusionbatchPDROID.cpp
-        source/OcclusionbatchPS.cpp   
-        source/Phase.cpp
         source/PhasebatchPD.cpp
-        source/PhasebatchPDROID.cpp
-        source/PhasebatchPS.cpp
-        source/Pixelate.cpp
         source/PixelatebatchPD.cpp
-        source/PixelatebatchPDROID.cpp
-        source/PixelatebatchPS.cpp
-        source/Rain.cpp
         source/RainbatchPD.cpp
-        source/RainbatchPDROID.cpp
-        source/RainbatchPS.cpp
-        source/RandomCropLetterBox.cpp
         source/RandomCropLetterBoxbatchPD.cpp
-        source/RandomCropLetterBoxbatchPDROID.cpp
-        source/RandomCropLetterBoxbatchPS.cpp   
-        source/RandomShadow.cpp
         source/RandomShadowbatchPD.cpp
-        source/RandomShadowbatchPDROID.cpp
-        source/RandomShadowbatchPS.cpp   
         source/Remap.cpp
-        source/Resize.cpp
         source/ResizebatchPD.cpp
-        source/ResizebatchPDROID.cpp
-        source/ResizebatchPS.cpp   
         source/ResizeCrop.cpp
         source/ResizeCropbatchPD.cpp
         source/ResizeCropbatchPDROID.cpp

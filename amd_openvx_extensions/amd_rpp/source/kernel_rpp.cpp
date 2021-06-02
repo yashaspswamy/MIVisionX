@@ -243,60 +243,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_JitterbatchPD(vx_graph graph,vx_im
 	}
 	return node;
 }
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_Occlusion(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_image pDst,vx_scalar src1x1,vx_scalar src1y1,vx_scalar src1x2,vx_scalar src1y2,vx_scalar src2x1,vx_scalar src2y1,vx_scalar src2x2,vx_scalar src2y2)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_reference params[] = {
-			(vx_reference) pSrc1,
-			(vx_reference) pSrc2,
-			(vx_reference) pDst,
-			(vx_reference) src1x1,
-			(vx_reference) src1y1,
-			(vx_reference) src1x2,
-			(vx_reference) src1y2,
-			(vx_reference) src2x1,
-			(vx_reference) src2y1,
-			(vx_reference) src2x2,
-			(vx_reference) src2y2,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_OCCLUSION, params, 12);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_OcclusionbatchPS(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_scalar src1x1,vx_scalar src1y1,vx_scalar src1x2,vx_scalar src1y2,vx_scalar src2x1,vx_scalar src2y1,vx_scalar src2x2,vx_scalar src2y2,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc1,
-			(vx_reference) pSrc2,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) src1x1,
-			(vx_reference) src1y1,
-			(vx_reference) src1x2,
-			(vx_reference) src1y2,
-			(vx_reference) src2x1,
-			(vx_reference) src2y1,
-			(vx_reference) src2x2,
-			(vx_reference) src2y2,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_OCCLUSIONBATCHPS, params, 15);
-	}
-	return node;
-}
 VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_OcclusionbatchPD(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array dstImgWidth,vx_array dstImgHeight,vx_array src1x1,vx_array src1y1,vx_array src1x2,vx_array src1y2,vx_array src2x1,vx_array src2y1,vx_array src2x2,vx_array src2y2,vx_uint32 nbatchSize)
 {
 	vx_node node = NULL;
@@ -325,41 +271,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_OcclusionbatchPD(vx_graph graph,vx
 			(vx_reference) DEV_TYPE
 		}; 
 		 node = createNode(graph, VX_KERNEL_RPP_OCCLUSIONBATCHPD, params, 17);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_OcclusionbatchPDROID(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array dstImgWidth,vx_array dstImgHeight,vx_array src1x1,vx_array src1y1,vx_array src1x2,vx_array src1y2,vx_array src2x1,vx_array src2y1,vx_array src2x2,vx_array src2y2,vx_array roiX,vx_array roiY,vx_array roiWidth,vx_array roiHeight,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc1,
-			(vx_reference) pSrc2,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) dstImgWidth,
-			(vx_reference) dstImgHeight,
-			(vx_reference) src1x1,
-			(vx_reference) src1y1,
-			(vx_reference) src1x2,
-			(vx_reference) src1y2,
-			(vx_reference) src2x1,
-			(vx_reference) src2y1,
-			(vx_reference) src2x2,
-			(vx_reference) src2y2,
-			(vx_reference) roiX,
-			(vx_reference) roiY,
-			(vx_reference) roiWidth,
-			(vx_reference) roiHeight,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_OCCLUSIONBATCHPDROID, params, 22);
 	}
 	return node;
 }
@@ -447,44 +358,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_SnowbatchPDROID(vx_graph graph,vx_
 	}
 	return node;
 }
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_Noise(vx_graph graph,vx_image pSrc,vx_image pDst,vx_scalar noiseProbability)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) pDst,
-			(vx_reference) noiseProbability,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_NOISE, params, 4);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NoisebatchPS(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_scalar noiseProbability,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) noiseProbability,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_NOISEBATCHPS, params, 7);
-	}
-	return node;
-}
 VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NoisebatchPD(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array noiseProbability,vx_uint32 nbatchSize)
 {
 	vx_node node = NULL;
@@ -503,81 +376,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NoisebatchPD(vx_graph graph,vx_ima
 			(vx_reference) DEV_TYPE
 		}; 
 		 node = createNode(graph, VX_KERNEL_RPP_NOISEBATCHPD, params, 7);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NoisebatchPDROID(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array noiseProbability,vx_array roiX,vx_array roiY,vx_array roiWidth,vx_array roiHeight,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) noiseProbability,
-			(vx_reference) roiX,
-			(vx_reference) roiY,
-			(vx_reference) roiWidth,
-			(vx_reference) roiHeight,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_NOISEBATCHPDROID, params, 11);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RandomShadow(vx_graph graph,vx_image pSrc,vx_image pDst,vx_scalar x1,vx_scalar y1,vx_scalar x2,vx_scalar y2,vx_scalar numberOfShadows,vx_scalar maxSizeX,vx_scalar maxSizeY)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) pDst,
-			(vx_reference) x1,
-			(vx_reference) y1,
-			(vx_reference) x2,
-			(vx_reference) y2,
-			(vx_reference) numberOfShadows,
-			(vx_reference) maxSizeX,
-			(vx_reference) maxSizeY,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RANDOMSHADOW, params, 10);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RandomShadowbatchPS(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_scalar x1,vx_scalar y1,vx_scalar x2,vx_scalar y2,vx_scalar numberOfShadows,vx_scalar maxSizeX,vx_scalar maxSizeY,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) x1,
-			(vx_reference) y1,
-			(vx_reference) x2,
-			(vx_reference) y2,
-			(vx_reference) numberOfShadows,
-			(vx_reference) maxSizeX,
-			(vx_reference) maxSizeY,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RANDOMSHADOWBATCHPS, params, 13);
 	}
 	return node;
 }
@@ -608,37 +406,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RandomShadowbatchPD(vx_graph graph
 	}
 	return node;
 }
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RandomShadowbatchPDROID(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array x1,vx_array y1,vx_array x2,vx_array y2,vx_array numberOfShadows,vx_array maxSizeX,vx_array maxSizeY,vx_array roiX,vx_array roiY,vx_array roiWidth,vx_array roiHeight,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) x1,
-			(vx_reference) y1,
-			(vx_reference) x2,
-			(vx_reference) y2,
-			(vx_reference) numberOfShadows,
-			(vx_reference) maxSizeX,
-			(vx_reference) maxSizeY,
-			(vx_reference) roiX,
-			(vx_reference) roiY,
-			(vx_reference) roiWidth,
-			(vx_reference) roiHeight,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RANDOMSHADOWBATCHPDROID, params, 17);
-	}
-	return node;
-}
 VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_FogbatchPD(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array fogValue,vx_uint32 nbatchSize)
 {
 	vx_node node = NULL;
@@ -657,50 +424,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_FogbatchPD(vx_graph graph,vx_image
 			(vx_reference) DEV_TYPE
 		}; 
 		 node = createNode(graph, VX_KERNEL_RPP_FOGBATCHPD, params, 7);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_Rain(vx_graph graph,vx_image pSrc,vx_image pDst,vx_scalar rainValue,vx_scalar rainWidth,vx_scalar rainHeight,vx_scalar rainTransperancy)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) pDst,
-			(vx_reference) rainValue,
-			(vx_reference) rainWidth,
-			(vx_reference) rainHeight,
-			(vx_reference) rainTransperancy,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RAIN, params, 7);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RainbatchPS(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_scalar rainValue,vx_scalar rainWidth,vx_scalar rainHeight,vx_scalar rainTransperancy,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) rainValue,
-			(vx_reference) rainWidth,
-			(vx_reference) rainHeight,
-			(vx_reference) rainTransperancy,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RAINBATCHPS, params, 10);
 	}
 	return node;
 }
@@ -728,80 +451,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RainbatchPD(vx_graph graph,vx_imag
 	}
 	return node;
 }
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RainbatchPDROID(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array rainValue,vx_array rainWidth,vx_array rainHeight,vx_array rainTransperancy,vx_array roiX,vx_array roiY,vx_array roiWidth,vx_array roiHeight,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) rainValue,
-			(vx_reference) rainWidth,
-			(vx_reference) rainHeight,
-			(vx_reference) rainTransperancy,
-			(vx_reference) roiX,
-			(vx_reference) roiY,
-			(vx_reference) roiWidth,
-			(vx_reference) roiHeight,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RAINBATCHPDROID, params, 14);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RandomCropLetterBox(vx_graph graph,vx_image pSrc,vx_image pDst,vx_scalar x1,vx_scalar y1,vx_scalar x2,vx_scalar y2)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) pDst,
-			(vx_reference) x1,
-			(vx_reference) y1,
-			(vx_reference) x2,
-			(vx_reference) y2,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RANDOMCROPLETTERBOX, params, 7);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RandomCropLetterBoxbatchPS(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_scalar dstImgWidth,vx_scalar dstImgHeight,vx_scalar x1,vx_scalar y1,vx_scalar x2,vx_scalar y2,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) dstImgWidth,
-			(vx_reference) dstImgHeight,
-			(vx_reference) x1,
-			(vx_reference) y1,
-			(vx_reference) x2,
-			(vx_reference) y2,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RANDOMCROPLETTERBOXBATCHPS, params, 12);
-	}
-	return node;
-}
 VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RandomCropLetterBoxbatchPD(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array dstImgWidth,vx_array dstImgHeight,vx_array x1,vx_array y1,vx_array x2,vx_array y2,vx_uint32 nbatchSize)
 {
 	vx_node node = NULL;
@@ -825,36 +474,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RandomCropLetterBoxbatchPD(vx_grap
 			(vx_reference) DEV_TYPE
 		}; 
 		 node = createNode(graph, VX_KERNEL_RPP_RANDOMCROPLETTERBOXBATCHPD, params, 12);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_RandomCropLetterBoxbatchPDROID(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array dstImgWidth,vx_array dstImgHeight,vx_array x1,vx_array y1,vx_array x2,vx_array y2,vx_array roiX,vx_array roiY,vx_array roiWidth,vx_array roiHeight,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) dstImgWidth,
-			(vx_reference) dstImgHeight,
-			(vx_reference) x1,
-			(vx_reference) y1,
-			(vx_reference) x2,
-			(vx_reference) y2,
-			(vx_reference) roiX,
-			(vx_reference) roiY,
-			(vx_reference) roiWidth,
-			(vx_reference) roiHeight,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RANDOMCROPLETTERBOXBATCHPDROID, params, 17);
 	}
 	return node;
 }
@@ -1087,44 +706,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_MagnitudebatchPD(vx_graph graph,vx
 	}
 	return node;
 }
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_Multiply(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_image pDst)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_reference params[] = {
-			(vx_reference) pSrc1,
-			(vx_reference) pSrc2,
-			(vx_reference) pDst,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_MULTIPLY, params, 4);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_MultiplybatchPS(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc1,
-			(vx_reference) pSrc2,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_MULTIPLYBATCHPS, params, 7);
-	}
-	return node;
-}
 VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_MultiplybatchPD(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_uint32 nbatchSize)
 {
 	vx_node node = NULL;
@@ -1146,69 +727,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_MultiplybatchPD(vx_graph graph,vx_
 	}
 	return node;
 }
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_MultiplybatchPDROID(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array roiX,vx_array roiY,vx_array roiWidth,vx_array roiHeight,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc1,
-			(vx_reference) pSrc2,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) roiX,
-			(vx_reference) roiY,
-			(vx_reference) roiWidth,
-			(vx_reference) roiHeight,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_MULTIPLYBATCHPDROID, params, 11);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_Phase(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_image pDst)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_reference params[] = {
-			(vx_reference) pSrc1,
-			(vx_reference) pSrc2,
-			(vx_reference) pDst,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_PHASE, params, 4);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_PhasebatchPS(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc1,
-			(vx_reference) pSrc2,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_PHASEBATCHPS, params, 7);
-	}
-	return node;
-}
 VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_PhasebatchPD(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_uint32 nbatchSize)
 {
 	vx_node node = NULL;
@@ -1227,31 +745,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_PhasebatchPD(vx_graph graph,vx_ima
 			(vx_reference) DEV_TYPE
 		}; 
 		 node = createNode(graph, VX_KERNEL_RPP_PHASEBATCHPD, params, 7);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_PhasebatchPDROID(vx_graph graph,vx_image pSrc1,vx_image pSrc2,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array roiX,vx_array roiY,vx_array roiWidth,vx_array roiHeight,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc1,
-			(vx_reference) pSrc2,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) roiX,
-			(vx_reference) roiY,
-			(vx_reference) roiWidth,
-			(vx_reference) roiHeight,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_PHASEBATCHPDROID, params, 11);
 	}
 	return node;
 }
@@ -1581,44 +1074,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_FlipbatchPD(vx_graph graph,vx_imag
 	}
 	return node;
 }
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_Resize(vx_graph graph,vx_image pSrc,vx_image pDst)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) pDst,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RESIZE, params, 3);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_ResizebatchPS(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_scalar dstImgWidth,vx_scalar dstImgHeight,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) dstImgWidth,
-			(vx_reference) dstImgHeight,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RESIZEBATCHPS, params, 8);
-	}
-	return node;
-}
 VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_ResizebatchPD(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array dstImgWidth,vx_array dstImgHeight,vx_uint32 nbatchSize)
 {
 	vx_node node = NULL;
@@ -1638,32 +1093,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_ResizebatchPD(vx_graph graph,vx_im
 			(vx_reference) DEV_TYPE
 		}; 
 		 node = createNode(graph, VX_KERNEL_RPP_RESIZEBATCHPD, params, 8);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_ResizebatchPDROID(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array dstImgWidth,vx_array dstImgHeight,vx_array roiX,vx_array roiY,vx_array roiWidth,vx_array roiHeight,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) dstImgWidth,
-			(vx_reference) dstImgHeight,
-			(vx_reference) roiX,
-			(vx_reference) roiY,
-			(vx_reference) roiWidth,
-			(vx_reference) roiHeight,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_RESIZEBATCHPDROID, params, 13);
 	}
 	return node;
 }
@@ -2659,44 +2088,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_CustomConvolutionbatchPD(vx_graph 
 	}
 	return node;
 }
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NonMaxSupression(vx_graph graph,vx_image pSrc,vx_image pDst,vx_scalar kernelSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) pDst,
-			(vx_reference) kernelSize,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_NONMAXSUPRESSION, params, 4);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NonMaxSupressionbatchPS(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_scalar kernelSize,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) kernelSize,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_NONMAXSUPRESSIONBATCHPS, params, 7);
-	}
-	return node;
-}
 VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NonMaxSupressionbatchPD(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array kernelSize,vx_uint32 nbatchSize)
 {
 	vx_node node = NULL;
@@ -2715,31 +2106,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NonMaxSupressionbatchPD(vx_graph g
 			(vx_reference) DEV_TYPE
 		}; 
 		 node = createNode(graph, VX_KERNEL_RPP_NONMAXSUPRESSIONBATCHPD, params, 7);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NonMaxSupressionbatchPDROID(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array kernelSize,vx_array roiX,vx_array roiY,vx_array roiWidth,vx_array roiHeight,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) kernelSize,
-			(vx_reference) roiX,
-			(vx_reference) roiY,
-			(vx_reference) roiWidth,
-			(vx_reference) roiHeight,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_NONMAXSUPRESSIONBATCHPDROID, params, 11);
 	}
 	return node;
 }
@@ -2765,44 +2131,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_GaussianFilterbatchPD(vx_graph gra
 	}
 	return node;
 }
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NonLinearFilter(vx_graph graph,vx_image pSrc,vx_image pDst,vx_scalar kernelSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) pDst,
-			(vx_reference) kernelSize,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_NONLINEARFILTER, params, 4);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NonLinearFilterbatchPS(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_scalar kernelSize,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) kernelSize,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_NONLINEARFILTERBATCHPS, params, 7);
-	}
-	return node;
-}
 VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NonLinearFilterbatchPD(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array kernelSize,vx_uint32 nbatchSize)
 {
 	vx_node node = NULL;
@@ -2821,31 +2149,6 @@ VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NonLinearFilterbatchPD(vx_graph gr
 			(vx_reference) DEV_TYPE
 		}; 
 		 node = createNode(graph, VX_KERNEL_RPP_NONLINEARFILTERBATCHPD, params, 7);
-	}
-	return node;
-}
-VX_API_ENTRY vx_node VX_API_CALL vxExtrppNode_NonLinearFilterbatchPDROID(vx_graph graph,vx_image pSrc,vx_array srcImgWidth,vx_array srcImgHeight,vx_image pDst,vx_array kernelSize,vx_array roiX,vx_array roiY,vx_array roiWidth,vx_array roiHeight,vx_uint32 nbatchSize)
-{
-	vx_node node = NULL;
-	vx_context context = vxGetContext((vx_reference)graph);
-	if(vxGetStatus((vx_reference)context) == VX_SUCCESS) {
-		vx_uint32 dev_type = getGraphAffinity(graph);
-		vx_scalar DEV_TYPE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &dev_type);
-		vx_scalar NBATCHSIZE = vxCreateScalar(vxGetContext((vx_reference)graph), VX_TYPE_UINT32, &nbatchSize);
-		vx_reference params[] = {
-			(vx_reference) pSrc,
-			(vx_reference) srcImgWidth,
-			(vx_reference) srcImgHeight,
-			(vx_reference) pDst,
-			(vx_reference) kernelSize,
-			(vx_reference) roiX,
-			(vx_reference) roiY,
-			(vx_reference) roiWidth,
-			(vx_reference) roiHeight,
-			(vx_reference) NBATCHSIZE,
-			(vx_reference) DEV_TYPE
-		}; 
-		 node = createNode(graph, VX_KERNEL_RPP_NONLINEARFILTERBATCHPDROID, params, 11);
 	}
 	return node;
 }
