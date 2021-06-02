@@ -99,56 +99,23 @@ list(APPEND SOURCES
         source/RandomShadowbatchPD.cpp
         source/Remap.cpp
         source/ResizebatchPD.cpp
-        source/ResizeCrop.cpp
         source/ResizeCropbatchPD.cpp
-        source/ResizeCropbatchPDROID.cpp
-        source/ResizeCropbatchPS.cpp   
         source/ResizeCropMirrorPD.cpp
-        source/Rotate.cpp   
         source/RotatebatchPD.cpp
-        source/RotatebatchPDROID.cpp
-        source/RotatebatchPS.cpp   
-        source/Saturation.cpp
         source/SaturationbatchPD.cpp
-        source/SaturationbatchPDROID.cpp
-        source/SaturationbatchPS.cpp   
-        source/Scale.cpp    
         source/ScalebatchPD.cpp
-        source/ScalebatchPDROID.cpp
-        source/ScalebatchPS.cpp   
-        source/Snow.cpp
         source/SnowbatchPD.cpp
-        source/SnowbatchPDROID.cpp
-        source/SnowbatchPS.cpp
-        source/Sobel.cpp
         source/SobelbatchPD.cpp
-        source/SobelbatchPDROID.cpp   
-        source/SobelbatchPS.cpp   
-        source/Subtract.cpp
         source/SubtractbatchPD.cpp
-        source/SubtractbatchPDROID.cpp
-        source/SubtractbatchPS.cpp
         source/TensorAdd.cpp
         source/TensorLookup.cpp   
         source/TensorMatrixMultiply.cpp   
         source/TensorMultiply.cpp
         source/TensorSubtract.cpp   
-        source/Thresholding.cpp
         source/ThresholdingbatchPD.cpp
-        source/ThresholdingbatchPDROID.cpp
-        source/ThresholdingbatchPS.cpp
-        source/Vignette.cpp
         source/VignettebatchPD.cpp
-        source/VignettebatchPDROID.cpp
-        source/VignettebatchPS.cpp   
-        source/WarpAffine.cpp
         source/WarpAffinebatchPD.cpp
-        source/WarpAffinebatchPDROID.cpp
-        source/WarpAffinebatchPS.cpp
-        source/WarpPerspective.cpp
         source/WarpPerspectivebatchPD.cpp
-        source/WarpPerspectivebatchPDROID.cpp
-        source/WarpPerspectivebatchPS.cpp
         source/kernel_rpp.cpp
         source/internal_publishKernels.cpp
     )
